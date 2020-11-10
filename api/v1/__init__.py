@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 
 
 def create_app(test_config=None):
@@ -24,9 +24,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
+    @app.route('/posts')
+    def get_posts():
+        return jsonify([{'title': 'first post', 'body': 'first post\'s body'}])
 
     # register the database commands
     from v1 import db
@@ -34,9 +34,9 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    # from flaskr import auth, blog
+    from v1 import auth
 
-    # app.register_blueprint(auth.bp)
+    app.register_blueprint(auth.bp)
     # app.register_blueprint(blog.bp)
 
     # make url_for('index') == url_for('blog.index')
